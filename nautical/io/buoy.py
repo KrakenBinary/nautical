@@ -1,9 +1,14 @@
+'''
+Get past and current data
+build and return a buoy data set
+'''
+
+from re import sub
+from logging import getLogger
 from nautical.io.web import get_noaa_forecast_url, get_url_source
 from nautical.noaa.buoy.buoy_data import BuoyData
 from nautical.noaa.buoy.buoy import Buoy
 from bs4 import BeautifulSoup
-from re import sub
-from logging import getLogger
 
 
 log = getLogger()
@@ -25,7 +30,8 @@ _PREVIOUS_OBSERVATION_SEARCH = "Previous observations"
 
 def create_buoy(buoy):
     """
-    Provide a full workup for a specific buoy. If the buoy is None or it cannot be found
+    Provide a full workup for a specific buoy.
+    If the buoy is None or it cannot be found
     then the data returned will be considered invalid as None
 
     :param buoy: id of the buoy to do a workup on
@@ -33,32 +39,34 @@ def create_buoy(buoy):
     """
     if not buoy:
         return None
-    
+
     url = get_noaa_forecast_url(buoy)
     soup = get_url_source(url)
-    
+
     current_buoy_data = BuoyData()
     get_current_data(soup, current_buoy_data, _DEFAULT_BUOY_WAVE_TEXT_SEARCH.format(buoy))
     get_current_data(soup, current_buoy_data, _SWELL_DATA_TEXT_SEARCH)
     past_data = get_past_data(soup)
-    
+
     buoy_data = Buoy(buoy)
     buoy_data.present = current_buoy_data
     # Leaving for backwards use, but not going to be used in the future.
-    log.warning("Setting past data is deprecated for %s" % str(buoy_data.__class__.__name__))
+    log.warning("Setting past data is deprecated for %s", str(buoy_data.__class__.__name__))
     buoy_data.past = past_data
-    
+
     return buoy_data
 
 
 def get_current_data(soup: BeautifulSoup, buoy: BuoyData, search: str):
     """
-    Search the beautiful soup object for a TABLE containing the search string. The function will
-    grab the data from the table and create a NOAAData object and return the data
+    Search the beautiful soup object for a TABLE
+    containing the search string. The function will
+    grab the data from the table and create a
+    NOAAData object and return the data
 
-    :param soup: beautiful soup object generated from the get_url_source()
+    :param soup: beautiful soup object generatedfrom the get_url_source()
     :param buoy: BuoyData object that should be filled with data as this function parses the data.
-    :param search: text to search for in the soup object. 
+    :param search: text to search for in the soup object.
     """
     txt_search = soup.find(text=search)
     if not txt_search:
@@ -79,12 +87,13 @@ def get_current_data(soup: BeautifulSoup, buoy: BuoyData, search: str):
                     key_data = cells[1].next.split()
                     key = sub('[():]', '', key_data[len(key_data) - 1]).lower()
                     value = cells[2].next.split()[0]
-                    
                     buoy.set(key, value)
+                    # too general exception exception. Probably need to fix?
+                    # catching exceptions you dont expect could make it
+                    # harder to debug
                 except Exception as e:
                     log.error(e)
                     # catch anything odd that may have been laying around
-                    pass
 
 
 def get_past_data(soup: BeautifulSoup):
@@ -92,7 +101,7 @@ def get_past_data(soup: BeautifulSoup):
     Find all Previous Observations or Past Data.
 
     :param soup: beautiful soup object generated from the get_url_source()
-    :return: list of all previous observations from the url. 
+    :return: list of all previous observations from the url.
     """
 
     past_data = {}
@@ -121,8 +130,8 @@ def get_past_data(soup: BeautifulSoup):
             noaa_var_names = [str(x.next).lower() for x in header_info]
 
             # find all of the rows of this table, then determine if the number
-            # of cells in the row matches the number of variables we just set, if
-            # so then this is the data set that we are looking for
+            # of cells in the row matches the number of variables we just set,
+            # if so then this is the data set that we are looking for
 
             for table_row in table.findAll("tr"):
                 cells = table_row.findAll("td")
@@ -138,7 +147,8 @@ def get_past_data(soup: BeautifulSoup):
                         nd = past_data.get(data["time"], BuoyData())
                         nd.from_dict(data)
 
-                        # update the dictionary even if this one already existed
+                        # update the dictionary
+                        # even if this one already existed
                         past_data[data["time"]] = nd
 
     return [x for x in past_data.values()]

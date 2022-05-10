@@ -1,3 +1,7 @@
+"""
+A 3D point containing latitude, longitude and altitude coordinates
+"""
+
 class Point:
 
     """
@@ -93,22 +97,24 @@ class Point:
         return hash(str(_prod))
 
     def parse(self, data: str) -> None:
-        """Parse the string containing lat, lon, alt [optional] 
+        """Parse the string containing lat, lon, alt [optional]
 
         .. note:: Comma separated data is parsed as lon, lat, alt [optional]
 
         :param data: A string containing (whitespace ignored and not a delimiter) lat, lon, altitude.
         """
         if data:
-            """ Remove all whitespace and lower case the value"""
+            # """Remove all whitespace and lower case the value"""
             data = data.lower()
             data = "".join(data.split())
             split_data = data.split(",")
 
             try:
                 self.longitude = float(split_data[0])  # should ALWAYS exist
-                self.latitude = float(split_data[1])   # should ALWAYS exist
+                self.latitude = float(split_data[1])  # should ALWAYS exist
                 if len(split_data) > 2:
-                    self.altitude = float(split_data[2])   # may or may not exist
-            except (IndexError, TypeError) as e:
-                raise # save stack information
+                    self.altitude = float(split_data[2])  # may or may not exist
+            except TypeError:
+                raise  # save stack information
+            except IndexError:
+                raise  # save stack information

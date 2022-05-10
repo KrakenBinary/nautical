@@ -1,24 +1,34 @@
+'''
+module doc
+'''
+
+from time import mktime, strptime
+from datetime import datetime
+from typing import Dict, Any
 from nautical.time.conversion import convert_noaa_time
 from nautical.time.nautical_time import nTime
 from nautical.time.enums import TimeFormat
-from time import mktime, strptime
-from datetime import datetime
-from nautical.units import *
-from typing import Dict, Any
+from nautical.units import SpeedUnits
+from nautical.units import DistanceUnits
+from nautical.units import TimeUnits
+from nautical.units import PressureUnits
+from nautical.units import TemperatureUnits
+from nautical.units import SalinityUnits
 
 
 # Not sure why but this is the default value for NOAA data that is not present.
-# There may be times where we check against this value for validity/availability
+# There may be times where we check against this value for validity/avail
 UNAVAILABLE_NOAA_DATA = "-"
 
 
 def _find_parameter_units(key: str) -> str:
     """
-    Function that will attempt to find the units associated with the key. If 
-    no units are found, None is returned.
+    Function that will attempt to find the units associated with the key.
+    If no units are found, None is returned.
 
     :param key: Name of the parameter
-    :return: string of the type of units if there are units associated with the parameter.
+    :return: string of the type of units if there are units associated
+    with the parameter.
     """
     return {
         "wspd": SpeedUnits.KNOTS,
@@ -47,7 +57,7 @@ class BuoyData(object):
     Class to contain all information included in a NOAA data point for
     a buoy. A buoy can also include weather stations.
     """
-    
+
     __slots__ = [
         # time/date data
         'year', 'mm', 'dd', 'time',
@@ -55,7 +65,7 @@ class BuoyData(object):
         'wdir', 'wspd', 'gst', 'wvht', 'dpd', 'apd', 'mwd', 'pres',
         'ptdy', 'atmp', 'wtmp', 'dewp', 'sal', 'vis', 'tide',
         # swell data
-        'swh', 'swp', 'swd', 'wwh', 'wwp', 'wwd', 'steepness', 
+        'swh', 'swp', 'swd', 'wwh', 'wwp', 'wwd', 'steepness',
         # new support
         'chill'
     ]
@@ -85,13 +95,13 @@ class BuoyData(object):
             date = '{}-{}-{} {}'.format(self.year, self.mm, self.dd, str(self.time))
             pattern = '%Y-%m-%d %H:%M:%S'
             return int(mktime(strptime(date, pattern)))
-        else:
-            return 0
+        # else:
+        return 0
 
     def __iter__(self):
         """
-        Provide a user friendly mapping of variable names to values stored in this
-        Buoy Data Object
+        Provide a user friendly mapping of variable names to values stored
+        in this Buoy Data Object
         """
         for entry in self.__slots__:
             val = getattr(self, entry, None)
@@ -101,7 +111,7 @@ class BuoyData(object):
 
     def from_dict(self, d: Dict[str, Any]):
         """
-        Fill this object from the data stored in a dictionary where 
+        Fill this object from the data stored in a dictionary where
         the key should match a slot or object variable
 
         :param d: Dictionary containing the data about this buoy
@@ -120,7 +130,7 @@ class BuoyData(object):
         if isinstance(value, str) and UNAVAILABLE_NOAA_DATA == value.strip():
             return
 
-        if "time" == key:
+        if key == "time":
             if isinstance(value, str):
                 setattr(self, key, convert_noaa_time(value))
             elif isinstance(value, nTime):

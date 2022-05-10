@@ -1,3 +1,12 @@
+'''
+    NOAA is kind enough to provide all of names, ids, and other information
+    about ALL of their known buoys in a kml document hosted at the link
+    provided (https://www.ndbc.noaa.gov/kml/marineobs_by_pgm.kml).
+    Read through this document and parse the buoy information to determine
+    their id and location. The ID can be used to provide to get_noaa
+    forecast_url(). Then we can find even more information about the buoys.
+'''
+
 from urllib.request import urlopen
 from urllib.error import URLError
 from pykml import parser
@@ -12,12 +21,6 @@ _KML_LINK = "https://www.ndbc.noaa.gov/kml/marineobs_by_pgm.kml"
 
 def get_buoy_sources():
     """
-    NOAA is kind enough to provide all of names, ids, and other information about ALL of their known buoys
-    in a kml document hosted at the link provided (https://www.ndbc.noaa.gov/kml/marineobs_by_pgm.kml).
-    Read through this document and parse the buoy information to determine their id and location.
-    The ID can be used to provide to get_noaa_forecast_url(). Then we can find even more information about the
-    buoys.
-
     .. note:: The SHIP ID is not available for lookup.
 
     :return: dictionary all source names mapped to their respective source.
@@ -40,19 +43,16 @@ def get_buoy_sources():
 
         for category in real_root.Document.Folder.Folder:
 
-            s = Source(category.name, category.description)
+            data_sources = Source(category.name, category.description)
 
             for pm in category.Placemark:
 
-                p = Point()
-                p.parse(str(pm.Point.coordinates))
-                b = Buoy(pm.name, description=pm.Snippet, location=p)
+                mark_point = Point()
+                mark_point.parse(str(pm.Point.coordinates))
+                mark_buoy = Buoy(pm.name, description=pm.Snippet, location=mark_point)
 
-                s.add_buoy(b)
+                data_sources.add_buoy(mark_buoy)
 
-            sources[s.name] = s
+            sources[data_sources.name] = data_sources
 
     return sources
-
-
-

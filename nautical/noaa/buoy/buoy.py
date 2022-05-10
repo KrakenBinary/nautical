@@ -1,12 +1,17 @@
-from nautical.noaa.buoy.buoy_data import BuoyData
-from nautical.error import NauticalError
-from nautical.location.point import Point
+'''
+Module doc
+'''
+
 from typing import List
 from warnings import warn
 from copy import copy
+from nautical.noaa.buoy.buoy_data import BuoyData
+from nautical.error import NauticalError
+from nautical.location.point import Point
 
 
 class Buoy:
+    '''class docstring'''
 
     def __init__(self, station, description: str = None, location=None) -> None:
         """
@@ -26,15 +31,15 @@ class Buoy:
     @property
     def location(self):
         """Location Property
-        
+
         :return: Copy of the location (Point)
         """
         return copy(self._location)
-    
+
     @location.setter
     def location(self, l):
         """Location setter/validity checker
-        
+
         :param l: Location or Point object to be set for the location of this instance
         """
         if isinstance(l, Point):
@@ -51,7 +56,7 @@ class Buoy:
 
     @property
     def present(self):
-        """Present Property, the present data stored in this instance. 
+        """Present Property, the present data stored in this instance.
         This is the most recent set of buoy data that was retrieved.
 
         :return: Copy of the `present` data stored in this instance
@@ -125,8 +130,8 @@ class Buoy:
         """
         if not self._location:
             return str(self.station)
-        else:
-            return "{} at {}".format(self.station, str(self._location))
+        # else:
+        return "{} at {}".format(self.station, str(self._location))
 
     def __eq__(self, other):
         """

@@ -1,5 +1,5 @@
-from .enums import Midday
-from .nautical_time import nTime
+from nautical.time.enums import Midday
+from nautical.time.nautical_time import nTime
 
 
 # constant value from HTML to create a non-breaking space value
@@ -25,7 +25,7 @@ def convert_noaa_time(orig: str):
         # get the am/pm value
         try:
             m = [x for x in Midday if x.name.lower() in sp[1]][0]
-        except IndexError as e:
+        except IndexError:
             return None
         m_s = sp[0].split(":")
 
@@ -33,7 +33,7 @@ def convert_noaa_time(orig: str):
 
         try:
             m = [x for x in Midday if x.name.lower() in orig.lower()][0]
-        except IndexError as e:
+        except IndexError:
             return None
 
         time_str_sp = [t for t in orig.lower().split(m.name.lower()) if t]
@@ -45,5 +45,5 @@ def convert_noaa_time(orig: str):
         t.hours = int(m_s[0]), m
 
         return t
-    else:
-        return None
+    # else:
+    return None

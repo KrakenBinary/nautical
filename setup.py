@@ -1,6 +1,10 @@
-from setuptools import setup, find_packages
+'''
+Setup project name, license, and requirments
+'''
+
 from os import path
 from json import loads
+from setuptools import setup, find_packages
 
 
 this_directory = path.abspath(path.dirname(__file__))
@@ -9,7 +13,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 with open("about.json") as about:
     jd = loads(about.read())
-    
+
 setup(
     name=jd["project"],
     version=jd["version"],

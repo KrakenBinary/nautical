@@ -1,3 +1,7 @@
+'''
+module doc
+'''
+
 from enum import Enum
 
 
@@ -57,7 +61,7 @@ class PressureUnits(Enum):
     BARR = 3  # Metric unit  100,000 Pa
     ATM = 4   # Standard Atmospheres
     AT = 5    # Technical Atmosphere
-    BA = 6    # Barad 
+    BA = 6    # Barad
     PSI = 7   # Pound per square inch (American) - Default
     HG = 8    # Mercury - manometric units (water influence)
 
@@ -67,4 +71,3 @@ class SalinityUnits(Enum):
     Units of salinity
     """
     PSU = 1  # Practical Salinity Unit
-

@@ -1,4 +1,8 @@
-from .buoy import Buoy
+'''
+modlue doc
+'''
+
+from nautical.noaa.buoy import Buoy
 
 
 class Source:
@@ -17,8 +21,8 @@ class Source:
 
         if not name:
             raise NotImplementedError("Invalid source name {}".format(name))
-        else:
-            self._name = name
+        # else:
+        self._name = name
 
         self._description = description
 
@@ -35,9 +39,10 @@ class Source:
     def __contains__(self, item):
         """
         Determine if the item buoy exists in our dictionary.
-        When `item` is a `Buoy`, check if the hash of the item is in the dict. 
-        when `item` is an int, assume this is the hash and check for it in the dict.
-        When `item` is a str, assume this is the station name check if its in the dict.
+        When `item` is a `Buoy`, check if the hash of the item is in the
+        dict. when `item` is an int, assume this is the hash and check
+        for it in the dict. When `item` is a str, assume this is the
+        station name check if its in the dict.
 
         :param item: should be a Buoy, String or int
         :return: True when the item is found in this instance.
@@ -48,11 +53,11 @@ class Source:
             return item in self._buoys
         elif isinstance(item, str):
             return next((True for k, v in self._buoys.items() if item == v.station), False)
-
         return False
 
     def __iter__(self):
-        """Override iterate to provide the user with the buoys in this instance.
+        """
+        Override iterate to provide the user with the buoys in this instance.
         Yield the `Buoy` objects in this instance.
         """
         for k, v in self._buoys.items():
@@ -91,7 +96,7 @@ class Source:
     @property
     def description(self):
         """Description Property for this instance
-    
+
         :return: The instance description.
         """
         return self._description
@@ -107,8 +112,8 @@ class Source:
         if buoy not in self:
             self._buoys[hash(buoy)] = buoy
             return True
-        else:
-            return False
+        # else:
+        return False
 
     def get_buoy(self, station):
         """Get a buoy where the station matches the `station` of the Buoy

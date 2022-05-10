@@ -1,15 +1,14 @@
-from . import (
+from logging import getLogger
+from nautical.units import (
     TimeUnits,
     TemperatureUnits,
     SpeedUnits,
     DistanceUnits,
     PressureUnits
 )
-from logging import getLogger
 
 
 log = getLogger()
-
 
 
 """
@@ -78,7 +77,7 @@ def convert_time(value, init_units, final_units):
     :param init_units: initial units for time
     :param final_units: desired time units
     :return: value converted from the initial units to the final units
-    :raises KeyError: 
+    :raises KeyError:
     """
     try:
         return value * TimeLookup[init_units] / TimeLookup[final_units]
@@ -100,7 +99,7 @@ def convert_distance(value, init_units, final_units):
         return value * DistanceLookup[init_units] / DistanceLookup[final_units]
     except KeyError as e:
         log.error(e)
-        raise 
+        raise
 
 
 def convert_speed(value, init_units, final_units):
@@ -118,7 +117,7 @@ def convert_speed(value, init_units, final_units):
         return value / SpeedLookup[init_units] * SpeedLookup[final_units]
     except KeyError as e:
         log.error(e)
-        raise 
+        raise
 
 
 def convert_pressure(value, init_units, final_units):
@@ -136,7 +135,7 @@ def convert_pressure(value, init_units, final_units):
         return value / PressureLookup[init_units] * PressureUnits[final_units]
     except KeyError as e:
         log.error(e)
-        raise 
+        raise
 
 
 # saved for quicker lookup
@@ -166,5 +165,5 @@ def convert(value, init_units, final_units):
         func = ConversionLookup.get(type(init_units), None)
         if callable(func):
             return func(value, init_units, final_units)
-        
-    raise TypeError  # two types did not match 
+
+    raise TypeError  # two types did not match

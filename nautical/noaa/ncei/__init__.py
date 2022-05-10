@@ -1,3 +1,9 @@
+"""
+Base token is included in the `token.ymal` file. Remember that other users
+_may_ be using the same token, and there is a limited number of queries
+per second and per day.
+"""
+
 from .token import get_default_token
 from .base import *
 from .data import Data
@@ -7,13 +13,6 @@ from .datatypes import DataType
 from .location_categories import LocationCategory
 from .locations import Location
 from .stations import Station
-
-
-"""
-Base token is included in the `token.ymal` file. Remember that other users _may_
-be using the same token, and there is a limited number of queries per second
-and per day. 
-"""
 
 
 all = [

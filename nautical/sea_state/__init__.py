@@ -1,6 +1,3 @@
-from nautical.units.units import DistanceUnits
-from nautical.units.conversion import convert
-
 """
 The following static dictionary contains all of the sea state upper limits where the
 value is in meters
@@ -16,6 +13,10 @@ sea state 7 = (6.0, 9.0]
 sea state 8 = (9.0, 14.0]
 sea state 9 = (14.0, inf]
 """
+
+from nautical.units.units import DistanceUnits
+from nautical.units.conversion import convert
+
 _SeaStates = {
         0: 0.0,
         1: 0.1,

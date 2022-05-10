@@ -1,22 +1,26 @@
-from ..error import NauticalError
+'''
+Module doc
+'''
+
 from math import radians, sin, cos, atan2, sqrt
-from .point import Point
+from nautical.error import NauticalError
+from nautical.location.point import Point
 
 _EARTH_RADIUS_METERS = 6372800
 
 
-def haversine(p1: Point, p2: Point) -> float:
+def haversine(point1: Point, point2: Point) -> float:
     """Haversine method for determining distance between two points.
 
-    :param p1: Point 1
-    :param p2: Point 2
+    :param point1: Point 1
+    :param point2: Point 2
     :return: Find the distance between two points using the Haversine methodology
     """
-    lat1 = radians(p1.latitude)
-    lat2 = radians(p2.latitude)
+    lat1 = radians(point1.latitude)
+    lat2 = radians(point2.latitude)
 
-    diff1 = radians(p1.latitude - p2.latitude)
-    diff2 = radians(p1.longitude - p2.longitude)
+    diff1 = radians(point1.latitude - point2.latitude)
+    diff2 = radians(point1.longitude - point2.longitude)
 
     a = sin(diff1 / 2.0) ** 2 + cos(lat1) * cos(lat2) * sin(diff2 / 2.0) ** 2
 
@@ -37,15 +41,15 @@ def in_range_ll(lat1_deg: float, lon1_deg: float, lat2_deg: float, lon2_deg: flo
     return in_range(Point(lat1_deg, lon1_deg), Point(lat2_deg, lon2_deg), distance_m)
 
 
-def in_range(p1: Point, p2: Point, distance_m) -> bool:
+def in_range(point1: Point, point2: Point, distance_m) -> bool:
     """Determine if the points are within a distance of each other.
-    
+
     :param p1: Point 1
     :param p2: Point 2
     :param distance_m: Max allowed distance between points to return true (meters).
     :return: True when the distance between P1 and P2 is less than (or equal to) distance_m
     """
-    return haversine(p1, p2) <= distance_m
+    return haversine(point1, point2) <= distance_m
 
 
 def area_converter(area: [Point]) -> [Point]:
@@ -71,7 +75,7 @@ def area_converter(area: [Point]) -> [Point]:
     return [Point(min_lat, min_lon), Point(max_lat, max_lon)]
 
 
-def in_area(p: Point, area: [Point]) -> bool:
+def in_area(point: Point, area: [Point]) -> bool:
     """
     Determine if point p is in the area. NOTE: the user should pass the original
     list of points through the area_converter. This will provide an approximate area.
@@ -89,4 +93,4 @@ def in_area(p: Point, area: [Point]) -> bool:
     max_lon = max(area[0].lon, area[1].lon)
     min_lon = min(area[0].lon, area[1].lon)
 
-    return max_lat >= p.latitude >= min_lat and max_lon >= p.longitude >= min_lon
+    return max_lat >= point.latitude >= min_lat and max_lon >= point.longitude >= min_lon

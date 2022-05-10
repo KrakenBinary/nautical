@@ -1,4 +1,4 @@
-from .enums import TimeFormat, Midday
+from nautical.time.enums import TimeFormat, Midday
 
 
 class nTime(object):
@@ -35,8 +35,8 @@ class nTime(object):
         """
         if self._midday:
             return self._hours % self._format.value, self._midday
-        else:
-            return self._hours % self._format.value
+        # else:
+        return self._hours % self._format.value
 
     @property
     def fmt(self):
@@ -114,7 +114,7 @@ class nTime(object):
             hours, midday = self.hours
             h = hours + 12 if midday in (Midday.PM, ) else hours
             return "{:02d}:{:02d}:00".format(h, self.minutes)
-        else:
-            return "{:02d}:{:02d}:00".format(self.hours, self.minutes)
+        # else:
+        return "{:02d}:{:02d}:00".format(self.hours, self.minutes)
 
 
